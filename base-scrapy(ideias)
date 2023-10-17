@@ -1,0 +1,63 @@
+import scrapy
+
+class TabelaSpider(scrapy.Spider):
+    name = 'tabela_spider'
+    start_urls = ['URL_DA_PAGINA_AQUI']
+
+    def parse(self, response):
+        # Use o seletor CSS correto para selecionar a tabela.
+        # Substitua 'SELETOR_DA_TABELA' pelo seletor apropriado.
+        for row in response.css('SELETOR_DA_TABELA tr'):
+            # Inicialize um dicionário para armazenar os dados da linha.
+            dados = {}
+
+            # Use o seletor CSS correto para selecionar as células da linha.
+            # Substitua 'SELETOR_DAS_CELULAS' pelo seletor apropriado.
+            cells = row.css('SELETOR_DAS_CELULAS td')
+
+            # Extraia os dados de cada célula e armazene-os no dicionário.
+            # Substitua 'EXTRAIR_DADOS_AQUI' pelos seletores corretos para cada campo.
+            dados['campo1'] = cells[0].css('EXTRAIR_DADOS_AQUI::text').get()
+            dados['campo2'] = cells[1].css('EXTRAIR_DADOS_AQUI::text').get()
+            # Adicione mais campos conforme necessário.
+
+            # Aqui você pode fazer o que quiser com os dados, como salvá-los em um arquivo ou em um banco de dados.
+            # Neste exemplo, apenas imprime os dados.
+            print(dados)
+
+        # Caso a página tenha paginação, você pode seguir os links para as próximas páginas.
+        # Substitua 'SELETOR_DO_LINK_PARA_PROXIMA_PAGINA' pelo seletor apropriado.
+        next_page = response.css('SELETOR_DO_LINK_PARA_PROXIMA_PAGINA::attr(href)').extract_first()
+        if next_page:
+            yield response.follow(next_page, self.parse)
+
+
+
+
+import scrapy
+
+class TabelaSpider(scrapy.Spider):
+    name = 'tabela_spider'
+    start_urls = ['URL_DA_PAGINA_AQUI']
+
+    def parse(self, response):
+        # Aqui você deve ajustar os seletores CSS para selecionar a tabela e seus elementos.
+        # Substitua 'SELETOR_DA_TABELA' e 'SELETOR_DOS_ITENS' pelos seletores corretos.
+        for item in response.css('SELETOR_DA_TABELA SELETOR_DOS_ITENS'):
+            # Extraia os dados que você precisa e armazene-os em variáveis.
+            # Substitua 'EXTRAIR_DADOS_AQUI' pelos seletores corretos para cada campo.
+            dados = {
+                'campo1': item.css('EXTRAIR_DADOS_AQUI').get(),
+                'campo2': item.css('EXTRAIR_DADOS_AQUI').get(),
+                # Adicione mais campos conforme necessário.
+            }
+
+            # Aqui você pode fazer o que quiser com os dados, como salvá-los em um arquivo ou em um banco de dados.
+            # Neste exemplo, apenas imprime os dados.
+            print(dados)
+
+        # Caso a página tenha paginação, você pode seguir os links para as próximas páginas.
+        # Substitua 'SELETOR_DO_LINK_PARA_PROXIMA_PAGINA' pelo seletor apropriado.
+        next_page = response.css('SELETOR_DO_LINK_PARA_PROXIMA_PAGINA::attr(href)').extract_first()
+        if next_page:
+            yield response.follow(next_page, self.parse)
