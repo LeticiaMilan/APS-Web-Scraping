@@ -11,11 +11,11 @@ import os
 import time
 
 # Definindo navegador e url
-edge = webdriver.Edge()
-edge.get('https://www.ssp.sp.gov.br/transparenciassp/consulta.aspx')
+driver = webdriver.Chrome()
+driver.get('https://www.ssp.sp.gov.br/transparenciassp/consulta.aspx')
 
 # Clica no botão de furto
-edge.find_element(By.ID, 'cphBody_btnFurtoVeiculo').click()
+driver.find_element(By.ID, 'cphBody_btnFurtoVeiculo').click()
 
 id_anos = ["cphBody_lkAno20", "cphBody_lkAno21", "cphBody_lkAno22"]
 
@@ -28,13 +28,13 @@ dados_combinados = pd.DataFrame()
 # Itera sobre os anos
 for i in range(len(id_anos)):
     # Espera até que o elemento do ano fique visível
-    WebDriverWait(edge, 120).until(EC.visibility_of_element_located((By.ID, f'{id_anos[i]}')))
+    WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.ID, f'{id_anos[i]}')))
     
     # Cria uma instância de ActionChains para lidar com ações de mouse
-    actions = ActionChains(edge)
+    actions = ActionChains(driver)
     
     # Encontra o elemento do ano
-    element_ano = edge.find_element(By.ID, f'{id_anos[i]}')
+    element_ano = driver.find_element(By.ID, f'{id_anos[i]}')
     
     # Move o mouse para o elemento do ano
     actions.move_to_element(element_ano).perform()
@@ -45,14 +45,14 @@ for i in range(len(id_anos)):
     # Itera sobre os meses
     for j in range(12):
         # Espera até que o elemento de bloqueio desapareça
-        WebDriverWait(edge, 600).until(
+        WebDriverWait(driver, 600).until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "blockUI blockOverlay"))
         )
         # Aguarda alguns segundos antes de clicar no mês
         time.sleep(10)  # 10 segundos
 
-        edge.find_element(By.ID, f'cphBody_listMes{j+1}').click()
-        edge.find_element(By.ID, 'cphBody_ExportarBOLink').click()
+        driver.find_element(By.ID, f'cphBody_listMes{j+1}').click()
+        driver.find_element(By.ID, 'cphBody_ExportarBOLink').click()
 
         # Aguarda o download do arquivo e lista os arquivos no diretório de download
         arquivos = os.listdir(diretorio_download)
@@ -67,5 +67,11 @@ for i in range(len(id_anos)):
 # Salva o DataFrame combinado em um arquivo Excel
 dados_combinados.to_excel('arquivo_combinado.xlsx', index=False)
 
+# Define o caminho dos arquivos para a troca de nomes
+caminho_csv = r"C:\aps\testesws\arquivo_combinado.csv"
+
+# Renomeando para o novo formato e nova pasta
+os.rename(caminho_arquivo, caminho_csv)
+
 # Fecha o navegador
-edge.quit()
+driver.quit()
