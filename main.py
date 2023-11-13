@@ -13,7 +13,7 @@ import time
 driver = webdriver.Edge()
 
 # Diretório de download
-diretorio_download = "C:\\Users\\Don\\Downloads"
+diretorio_download = "C:\\Users\\marti\\Downloads"
 
 # Diretório do projeto
 diretorio_projeto = "C:\\Users\\marti\\OneDrive\\Documentos\\projetos\\python\\testesws\\planilhas"
@@ -73,15 +73,21 @@ def agrupar_arquivos():
 
         # Cria um arquivo para fazer append
         arquivos_unidos = open("Arquivos_unidos.csv","a")
+
         for mes in meses:    
+            # Abre o arquivo atual
             arquivo = open(f'planilhas/DadosBO_{ano}_{mes}(FURTO DE VEÍCULOS).xls')
+
+            # Armazena o arquivo em uma variável
             dados_combinados = arquivo.read()
+
+            # Faz o append do arquivo para o arquivo principal
             arquivos_unidos.write(dados_combinados)
 
 # Fecha o navegador
 driver.quit()
 
 # Chamando funções
-# exportar_arquivos()
-# mudar_diretorio()
+exportar_arquivos()
+mudar_diretorio()
 agrupar_arquivos()
